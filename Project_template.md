@@ -59,6 +59,9 @@
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka из UI http://localhost:8090 
 
+[скриншот состояния топиков Kafka](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/kafka_topics.PNG
+[скриншот тестов] (https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/test_results.PNG)
+
 # Задание 3
 
 Команда начала переезд в Kubernetes для лучшего масштабирования и повышения надежности. 
