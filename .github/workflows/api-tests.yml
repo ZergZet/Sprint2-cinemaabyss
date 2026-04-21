@@ -18,9 +18,8 @@ jobs:
 
       - name: Start services with Docker Compose
         run: |
-          docker compose up -d
-          echo "Waiting for services to be ready..."
-          sleep 30   # или лучше использовать healthcheck
+          docker compose up -d --wait --wait-timeout 60
+          docker compose ps
 
       - name: Build API test image
         run: |
@@ -28,7 +27,8 @@ jobs:
 
       - name: Run API tests in container
         run: |
-          docker run --network=cinemaabyss-network \
+          docker run --rm \
+            --network=cinemaabyss-network \
             -v "$(pwd)/tests/postman/reports:/app/reports" \
             cinemaabyss-api-tests --environment docker
 
