@@ -20,26 +20,17 @@ jobs:
         run: |
           docker compose up -d
           echo "Waiting for services to be ready..."
-          sleep 30   # подождать, пока сервисы запустятся
+          sleep 30   # или лучше использовать healthcheck
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: tests/postman/package-lock.json
-
-      - name: Install Newman
-        working-directory: tests/postman
-        run: npm install
-
-      - name: Run API tests
-        working-directory: tests/postman
+      - name: Build API test image
         run: |
-          npx newman run CinemaAbyss.postman_collection.json \
-            --environment docker-env.json \
-            --reporters cli,json \
-            --reporter-json-export ./reports/newman-report.json
+          docker build -t cinemaabyss-api-tests ./tests/postman
+
+      - name: Run API tests in container
+        run: |
+          docker run --network=cinemaabyss-network \
+            -v "$(pwd)/tests/postman/reports:/app/reports" \
+            cinemaabyss-api-tests --environment docker
 
       - name: Stop services
         if: always()
