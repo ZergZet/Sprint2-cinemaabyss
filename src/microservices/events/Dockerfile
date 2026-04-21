@@ -3,7 +3,7 @@ FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY go.mod ./
+COPY go.mod go.sum ./
 
 # Download all dependencies
 #RUN go mod download
@@ -12,12 +12,12 @@ COPY go.mod ./
 COPY . .
 
 # Build the application
-#RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o monolith .
+#RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o events-service .
 # Собираем без интернета
-RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -o monolith .
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -o events-service .
 
 # Use a smaller image for the final application
-FROM alpine:latest  
+FROM alpine:latest
 
 #RUN apk --no-cache add ca-certificates
 # Копируем сертификаты из builder-образа (чтобы не вызывать apk)
@@ -26,10 +26,10 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 WORKDIR /root/
 
 # Copy the binary from builder
-COPY --from=builder /app/monolith .
+COPY --from=builder /app/events-service .
 
 # Expose the application port
-EXPOSE 8080
+EXPOSE 8082
 
 # Command to run the executable
-CMD ["./monolith"]
+CMD ["./events-service"]
