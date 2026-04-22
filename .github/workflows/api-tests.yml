@@ -25,6 +25,9 @@ jobs:
         run: |
           docker build -t cinemaabyss-api-tests ./tests/postman
 
+      - name: Wait for Kafka and create topics
+        run: tests/postman/wait-for-kafka.sh
+  
       - name: Run API tests in container
         run: |
           docker run --rm \
