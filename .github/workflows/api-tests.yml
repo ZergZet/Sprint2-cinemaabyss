@@ -35,9 +35,12 @@ jobs:
 
       - name: Start services with Docker Compose
         run: |
-          docker compose up -d --wait --wait-timeout 60
+          docker compose up -d --wait --wait-timeout 60 || true
+          echo "=== Logs of monolith ===" 
+          docker logs cinemaabyss-monolith
+          echo "========================"
           docker compose ps
-
+    
       - name: Build API test image
         run: |
           docker build -t cinemaabyss-api-tests ./tests/postman
