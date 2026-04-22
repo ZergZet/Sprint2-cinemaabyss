@@ -90,7 +90,8 @@ services:
       dockerfile: Dockerfile
     container_name: cinemaabyss-movies-service
     depends_on:
-      - postgres
+        postgres:
+          condition: service_healthy
     ports:
       - "8081:8081"
     environment:
@@ -105,9 +106,11 @@ services:
       context: ./src/microservices/events
       dockerfile: Dockerfile
     container_name: cinemaabyss-events-service
-    depends_on:
-      - postgres
-      - kafka
+      depends_on:
+        postgres:
+          condition: service_healthy
+        kafka:
+          condition: service_healthy
     ports:
       - "8082:8082"
     environment:
