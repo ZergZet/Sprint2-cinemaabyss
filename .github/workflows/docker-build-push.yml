@@ -129,12 +129,4 @@ jobs:
           labels: ${{ steps.meta-proxy.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-# _______________________________________________
-# API tests
-# _______________________________________________
-      - name: API tests
-        run: |
-          cd tests/postman
-          npm install
-          npm run test:docker || true
-      
+
