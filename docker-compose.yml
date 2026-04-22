@@ -22,7 +22,7 @@ services:
     networks:
       - cinemaabyss-network
 
-    # ZooKeeper (Confluent)
+  # ZooKeeper (Confluent)
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: cinemaabyss-zookeeper
@@ -56,7 +56,6 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      # Автоматическое создание топиков работает надёжнее
       KAFKA_CREATE_TOPICS: "movie-events:1:1,user-events:1:1,payment-events:1:1"
     healthcheck:
       test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
@@ -90,8 +89,8 @@ services:
       dockerfile: Dockerfile
     container_name: cinemaabyss-movies-service
     depends_on:
-        postgres:
-          condition: service_healthy
+      postgres:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:
@@ -106,11 +105,11 @@ services:
       context: ./src/microservices/events
       dockerfile: Dockerfile
     container_name: cinemaabyss-events-service
-      depends_on:
-        postgres:
-          condition: service_healthy
-        kafka:
-          condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     ports:
       - "8082:8082"
     environment:
@@ -146,7 +145,8 @@ services:
     image: provectuslabs/kafka-ui:latest
     container_name: cinemaabyss-kafka-ui
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     ports:
       - "8090:8080"
     environment:
