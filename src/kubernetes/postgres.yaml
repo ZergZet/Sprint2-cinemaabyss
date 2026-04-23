@@ -37,10 +37,10 @@ spec:
               key: DB_NAME
         resources:
           limits:
-            cpu: "1000m"
+            cpu: "600m"
             memory: "1Gi"
           requests:
-            cpu: "500m"
+            cpu: "300m"
             memory: "512Mi"
         volumeMounts:
         - name: postgres-data
