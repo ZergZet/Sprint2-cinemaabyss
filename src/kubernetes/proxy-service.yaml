@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: proxy-service
-        image: ghcr.io/ZergZet/Sprint2-cinemaabyss/proxy-service:latest
+        image: ghcr.io/zergzet/sprint2-cinemaabyss/proxy-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
