@@ -29,6 +29,10 @@ spec:
         env:
         - name: PORT
           value: "8082"
+        - name: KAFKA_BROKER
+          value: "kafka:9092"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"
         envFrom:
         - configMapRef:
             name: cinemaabyss-config
