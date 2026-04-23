@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: events-service
-        image: ghcr.io/ZergZet/Sprint2-cinemaabyss/events-service:latest
+        image: ghcr.io/zergzet/Sprint2-cinemaabyss/events-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8082
