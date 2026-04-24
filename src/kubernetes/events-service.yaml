@@ -59,7 +59,7 @@ spec:
           periodSeconds: 20
       restartPolicy: Always
       imagePullSecrets:
-        - name: dockerconfigjson
+      - name: dockerconfigjson
 ---
 apiVersion: v1
 kind: Service
