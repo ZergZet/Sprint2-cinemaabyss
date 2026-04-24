@@ -150,10 +150,6 @@ spec:
           value: "1"
         - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
           value: "1"
-        {{- if .Values.kafka.topics }}
-        - name: KAFKA_CREATE_TOPICS
-          value: "{{ range $i, $topic := .Values.kafka.topics }}{{ if $i }},{{ end }}{{ $topic.name }}:{{ $topic.partitions }}:{{ $topic.replicationFactor }}{{ end }}"
-        {{- end }}
         volumeMounts:
         - name: kafka-data
           mountPath: /var/lib/kafka
