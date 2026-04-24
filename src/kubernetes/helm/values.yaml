@@ -109,12 +109,30 @@ eventsService:
     targetPort: 8082
     type: ClusterIP
 
-# Kafka configuration
+zookeeper:
+  enabled: true
+  image:
+    repository: bitnami/zookeeper
+    tag: 3.8.1
+    pullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  persistence:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce
+
 kafka:
   enabled: true
   image:
-    repository: confluentinc/cp-kafka
-    tag: 7.5.0
+    repository: bitnami/kafka
+    tag: 3.4.0
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
@@ -122,7 +140,7 @@ kafka:
       cpu: 1000m
       memory: 1Gi
     requests:
-      cpu: 300m
+      cpu: 200m
       memory: 512Mi
   persistence:
     enabled: true
@@ -138,26 +156,6 @@ kafka:
     - name: payment-events
       partitions: 1
       replicationFactor: 1
-
-# Zookeeper configuration
-zookeeper:
-  enabled: true
-  image:
-    repository: confluentinc/cp-zookeeper
-    tag: 7.5.0
-    pullPolicy: IfNotPresent
-  replicas: 1
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 200m
-      memory: 256Mi
-  persistence:
-    enabled: true
-    size: 1Gi
-    accessMode: ReadWriteOnce
 
 # Ingress configuration
 ingress:
