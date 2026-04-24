@@ -29,6 +29,11 @@ spec:
         imagePullPolicy: {{ .Values.eventsService.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.eventsService.service.targetPort }}
+        env:
+        - name: KAFKA_BROKER
+          value: "kafka:9092"
+        - name: BOOTSTRAP_SERVERS
+          value: "kafka:9092"
         envFrom:
         - configMapRef:
             name: cinemaabyss-config
