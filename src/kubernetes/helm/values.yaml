@@ -113,8 +113,8 @@ eventsService:
 kafka:
   enabled: true
   image:
-    repository: bitnami/kafka
-    tag: 3.4.0
+    repository: wurstmeister/kafka
+    tag: 2.13-2.7.0
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
@@ -143,8 +143,8 @@ kafka:
 zookeeper:
   enabled: true
   image:
-    repository: bitnami/zookeeper
-    tag: 3.8.1
+    repository: wurstmeister/zookeeper
+    tag: lastest
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
