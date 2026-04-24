@@ -277,9 +277,13 @@ cat .docker/config.json | base64
 
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
+
 [вывода при вызове https://cinemaabyss.example.com/api/movies](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/movies_list.PNG)
+
 [скриншот вывода тестов и event-service начало](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/1.kube_start_tests.PNG)
+
 [скриншот вывода тестов и event-service середина](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/2.kube_tests.PNG)
+
 [скриншот вывода тестов и event-service результат](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/3.%20kube_result_tests_and_logs%20.PNG)
 
 
