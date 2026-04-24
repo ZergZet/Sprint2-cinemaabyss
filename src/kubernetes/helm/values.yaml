@@ -113,7 +113,7 @@ zookeeper:
   enabled: true
   image:
     repository: bitnami/zookeeper
-    tag: 3.8.1
+    tag: latest
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
@@ -132,7 +132,7 @@ kafka:
   enabled: true
   image:
     repository: bitnami/kafka
-    tag: 3.4.0
+    tag: latest
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
