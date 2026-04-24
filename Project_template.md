@@ -4,8 +4,10 @@
 
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
 Результат представьте в виде контейнерной диаграммы в нотации С4.
-Добавьте ссылку на файл в этот шаблон
-[to-be_c4_container](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/diagrams/to-be_c4_container.puml))
+Добавьте ссылку на файл в этот шаблон)
+
+[to-be_c4_container](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/diagrams/to-be_c4_container.puml)
+![to-be_c4_container](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/diagrams/to-be_c4_container.png)
 
 # Задание 2
 
@@ -59,8 +61,8 @@
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka из UI http://localhost:8090 
 
-[скриншот состояния топиков Kafka](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/kafka_topics.PNG
-[скриншот тестов] (https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/test_results.PNG)
+![скриншот состояния топиков Kafka](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/kafka_topics.PNG
+![скриншот тестов] (https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/test_results.PNG)
 
 # Задание 3
 
@@ -276,15 +278,17 @@ cat .docker/config.json | base64
   Откройте логи event-service и сделайте скриншот обработки событий
 
 #### Шаг 3
-Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
+Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies
 
-[вывода при вызове https://cinemaabyss.example.com/api/movies](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/movies_list.PNG)
+![вывода при вызове https://cinemaabyss.example.com/api/movies](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/movies_list.PNG)
 
-[скриншот вывода тестов и event-service начало](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/1.kube_start_tests.PNG)
+и  скриншот вывода event-service после вызова тестов.
 
-[скриншот вывода тестов и event-service середина](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/2.kube_tests.PNG)
+![скриншот вывода тестов и event-service начало](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/1.kube_start_tests.PNG)
 
-[скриншот вывода тестов и event-service результат](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/3.%20kube_result_tests_and_logs%20.PNG)
+![скриншот вывода тестов и event-service середина](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/2.kube_tests.PNG)
+
+![скриншот вывода тестов и event-service результат](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/3.%20kube_result_tests_and_logs%20.PNG)
 
 
 # Задание 4
@@ -360,6 +364,8 @@ minikube tunnel
 Потом вызовите 
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
+
+![скриншот развертывания helm и вывода](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/Helm.png)
 
 ## Удаляем все
 
