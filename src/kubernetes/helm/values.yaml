@@ -113,16 +113,16 @@ eventsService:
 kafka:
   enabled: true
   image:
-    repository: confluentinc/cp-kafka
-    tag: 7.5.0
+    repository: bitnami/kafka
+    tag: 3.4.0
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
     limits:
-      cpu: 600m
+      cpu: 1000m
       memory: 1Gi
     requests:
-      cpu: 200m
+      cpu: 300m
       memory: 512Mi
   persistence:
     enabled: true
@@ -143,16 +143,16 @@ kafka:
 zookeeper:
   enabled: true
   image:
-    repository: confluentinc/cp-zookeeper
-    tag: 7.5.0
+    repository: bitnami/zookeeper
+    tag: 3.8.1
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
     limits:
-      cpu: 400m
+      cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 100m
+      cpu: 200m
       memory: 256Mi
   persistence:
     enabled: true
