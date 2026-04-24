@@ -114,7 +114,7 @@ zookeeper:
   image:
     repository: bitnami/zookeeper
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   replicas: 1
   resources:
     limits:
@@ -133,7 +133,7 @@ kafka:
   image:
     repository: bitnami/kafka
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   replicas: 1
   resources:
     limits:
