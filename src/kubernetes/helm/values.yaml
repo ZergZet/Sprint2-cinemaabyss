@@ -105,6 +105,11 @@ eventsService:
       cpu: 100m
       memory: 128Mi
   service:
+    env:
+    - name: KAFKA_BROKER
+      value: "kafka:9092"
+    - name: BOOTSTRAP_SERVERS
+      value: "kafka:9092"
     port: 8082
     targetPort: 8082
     type: ClusterIP
