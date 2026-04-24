@@ -23,7 +23,7 @@ spec:
       labels:
         app: proxy-service
     spec:
-       imagePullSecrets:
+      imagePullSecrets:
         - name: regcred
       containers:
         - name: proxy-service
@@ -35,7 +35,7 @@ spec:
             - configMapRef:
                 name: cinemaabyss-config
           resources:
-            {{- toYaml .Values.proxyService.resources | nindent 10 }}
+            {{- toYaml .Values.proxyService.resources | nindent 12 }}
 ---
 apiVersion: v1
 kind: Service
@@ -48,9 +48,9 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   selector:
-    app: events-service
+    app: proxy-service
   ports:
-  - port: {{ .Values.proxyService.service.port }}
-    targetPort: {{ .Values.proxyService.service.targetPort }}
+    - port: {{ .Values.proxyService.service.port }}
+      targetPort: {{ .Values.proxyService.service.targetPort }}
   type: {{ .Values.proxyService.service.type }}
 {{- end }}
