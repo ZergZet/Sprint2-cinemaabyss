@@ -6,6 +6,7 @@ global:
 # Image pull secrets
 imagePullSecrets:
   dockerconfigjson: ewogICJhdXRocyI6IHsKICAgICJnaGNyLmlvIjogewogICAgICAiYXV0aCI6ICJXbVZ5WjFwbGREcG5hSEJmV0c1MFNWUmpOMVoyYTJkTGIySk1ZV04wWmxaRVRGTTROR3BIVGprek1XcFBkRlZzIgogICAgfQogIH0KfQo=
+
 # Database configuration
 database:
   host: postgres
@@ -108,11 +109,6 @@ eventsService:
     port: 8082
     targetPort: 8082
     type: ClusterIP
-  extraEnv:
-    - name: KAFKA_BROKER
-      value: "kafka:9092"
-    - name: BOOTSTRAP_SERVERS
-      value: "kafka:9092"
 
 # Kafka configuration
 kafka:
