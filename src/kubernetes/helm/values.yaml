@@ -19,10 +19,10 @@ database:
     pullPolicy: IfNotPresent
   resources:
     limits:
-      cpu: 1000m
+      cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 500m
+      cpu: 200m
       memory: 512Mi
   persistence:
     enabled: true
@@ -39,10 +39,10 @@ monolith:
   replicas: 1
   resources:
     limits:
-      cpu: 500m
+      cpu: 300m
       memory: 512Mi
     requests:
-      cpu: 100m
+      cpu: 150m
       memory: 128Mi
   service:
     port: 8080
@@ -59,10 +59,10 @@ proxyService:
   replicas: 1
   resources:
     limits:
-      cpu: 300m
+      cpu: 200m
       memory: 256Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
   service:
     port: 80
@@ -79,10 +79,10 @@ moviesService:
   replicas: 1
   resources:
     limits:
-      cpu: 300m
+      cpu: 200m
       memory: 256Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
   service:
     port: 8081
@@ -119,7 +119,7 @@ kafka:
   replicas: 1
   resources:
     limits:
-      cpu: 1000m
+      cpu: 600m
       memory: 1Gi
     requests:
       cpu: 200m
@@ -149,7 +149,7 @@ zookeeper:
   replicas: 1
   resources:
     limits:
-      cpu: 500m
+      cpu: 400m
       memory: 512Mi
     requests:
       cpu: 100m
