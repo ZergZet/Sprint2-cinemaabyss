@@ -1,0 +1,158 @@
+@startuml
+title Cinema Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+System(CinemaSystem, "Онлайн кинотеатор", "Просмотр видео с различных площадок, отзыва и оценки")
+
+Person(Administrator, "Администратор", "Управляет сетевой безопасностью и телеметрией")
+Container(AdminApp, "Web-приложение", "Go", "Интерфейс управления доступом к системе")
+Rel(Administrator, AdminApp,"Управляет подключениями и разрешениями пользователей")
+
+Person(SupportUser, "Поддержка", "Решает проблемы пользователей")
+Container(SupportApp, "Web-приложение", "Go", "Интерфейс управления поддержкой пользователей")
+Rel(SupportUser, SupportApp,"Управляет подключениями и разрешениями пользователей")
+
+Person(WebUser, "Пользователь", "Смотрит фильмы через Web")
+Person(AppleUser, "Пользователь", "Смотрит фильмы через устройства Apple")
+Person(AndroidUser, "Пользователь", "Смотрит фильмы через устройства Android")
+Person(TvUser, "Пользователь", "Смотрит фильмы через Smart TV")
+
+Container(WebApplication, "Веб-приложение", "JavaScript, React", "Предоставляет веб-интерфейс для ноутбуков и ПК") 
+Container(AndroidApp, "Мобильное приложение", "Android", "Приложение для мобильных устройств Apple") 
+Container(AppleApp, "Мобильное приложение", "iOS", "Приложение для мобильных устройств Android")     
+Container(SmartTV, "Smart TV приложение", "TV OS", "Приложение для Smart TV")    
+
+Rel(WebUser, WebApplication, "Использует", "HTTPS") 
+Rel(AndroidUser, AndroidApp, "Использует", "HTTPS") 
+Rel(AppleUser, AppleApp, "Использует", "HTTPS") 
+Rel(TvUser, SmartTV, "Использует", "HTTPS")
+
+System_Ext(RecommendationSystem, "External Recommendation System", "Внешняя рекомендательная система") 
+System_Ext(PaymentSystem, "Payment Gateways", "Внешние платежные системы") 
+System_Ext(ExternalStreaming, "External Streaming Services", "Сторонние стриминговые сервисы")
+
+Boundary(CinemaSystem, "Кинобездна"){ 
+
+    Boundary(ControlDomain, "Домен управления") {
+      
+      Boundary(SupportDomain, "Подомен управления и поддержки") {
+        Container(SupportService, "Control Service", "Go", "Сервис управления проблемами пользователей")
+        ContainerDb(SupportDB, "Control Database", "PostgreSQL", "Хранит данные и роли поддержки")
+        Rel(SupportService, SupportDB, "Чтение/запись", "SQL") 
+      }
+
+      Boundary(ScalingDomain, "Поддомен масштабирования") {
+        Container(APIGW, "API-Gateway", "NGinx", "Масштабирование, балансировка нагрузки, шифрование трафика, проксирование и аутентификация")
+  
+        Container(AuthService, "Authentication Service", "Go", "Аутентификация и управление пользователями")
+        ContainerDb(UserDB, "User Database", "PostgreSQL", "Хранит данные пользователей")
+        Rel(AuthService, UserDB, "Чтение/запись", "SQL") 
+      
+        ContainerQueue(Kafka, "Apache Kafka", "Kafka", "Шина событий для асинхронной коммуникации")
+      }    
+      Boundary( Telemetry, "Поддомен телеметрии"){
+
+        Container(Grafana, "Grafana", "Grafana", "Построение графиков и отчётова")
+        Container(Prometeus, "Prometeus", "Prometeus", "Сбор метрик и телеметрии")
+        ContainerDb(PrometeusDatabase, "База сбора логов и телеметрии", "ClickHouse", "Хранит логи и данные телеметрии")
+
+        Rel(Administrator, Grafana,"Анализ метрик и телеметрии")
+        Rel(Grafana,Prometeus,"Чтение данных для графиков и диаграммам")
+        Rel(Prometeus,PrometeusDatabase,"Чтение/Запись данных телеметрии")
+        Rel(Kafka, Prometeus, "Отправляет события и  метрики для анализа", "Kafka Protocol") 
+      }
+    }
+
+    Boundary(ContentDomain, "Домен видеоконтента") {
+      Container(MetadataService, "Metadata Service", "Go", "Управление метаданными фильмов")
+      ContainerDb(MetadataDB, "Metadata Database", "PostgreSQL", "Хранит метаданные фильмов")
+      Rel(MetadataService, MetadataDB, "Чтение/запись", "SQL") 
+      ContainerDb(S3DB, "Object Storage", "S3 Storage", "Хранилище для ссылок на стримы, метаданных и статики")
+      Rel(MetadataService, S3DB, "Хранит постеры, трейлеры", "S3 API") 
+
+      Container(ContentService, "Content Service", "Go", "Управление видео-контентом и ссылками")      
+      Rel(ContentService, ExternalStreaming, "Проверяет доступность контента", "HTTPS/API")      
+      ContainerDb(ContentDB, "Content Database", "PostgreSQL", "Хранит информацию о видео")      
+      Rel(ContentService, ContentDB, "Чтение/запись", "SQL") 
+      Rel(ContentService, S3DB, "Получает ссылки на стримы", "S3 API") 
+
+    }
+
+    Boundary(FinancialDomain, "Домен управления финансами"){ 
+      Container(PaymentService, "Payment Service", "Go", "Обработка платежей")
+      ContainerDb(PaymentDB, "Payment Database", "PostgreSQL", "Хранит данные о платежах")
+      Rel(PaymentService, PaymentDB, "Чтение/запись", "SQL") 
+
+      Rel(PaymentService, PaymentSystem, "Интеграция с внешними платежными системами", "HTTPS") 
+
+      Container(MarketingService, "Marketing Service", "Go", "Управление скидками и маркетинговыми акциями")
+      ContainerDb(MarketingDB, "Marketing Database", "PostgreSQL", "Хранит данные о скидках и проводимых акциях")
+      Rel(MarketingService, MarketingDB, "Чтение/запись", "SQL") 
+
+      Container(SubscriptionService, "Subscription Service", "Go", "Управление подписками")
+      ContainerDb(SubscriptionDB, "Subscription Database", "PostgreSQL", "Хранит данные о подписках")
+      Rel(SubscriptionService, SubscriptionDB, "Чтение/запись", "SQL") 
+    }
+
+    Boundary(RecommendationDomain, "Домен управления рекомендациями") {
+     
+      Container(FavoriteService, "Favorite Service", "Go, Python", "Управление рецензиями и избранным")   
+      ContainerDb(FavoriteDB, "Favorite Database", "PostgreSQL", "Хранит рецензии и избранное пользователя")
+      Rel(FavoriteService, FavoriteDB, "Чтение/запись", "SQL")
+
+      Container(HistoryService, "History Service", "Go, Python", "Сбор и анализ истории пользовательской активности")   
+      ContainerDb(HistoryDB, "History Database", "PostgreSQL", "Хранит исторические данные для аналитики пользовательской активности")
+      Rel(HistoryService, HistoryDB, "Чтение/запись", "SQL")
+
+      Container(RecommendationService, "Recommendation Service", "Go, Python", "Управление пользовательскими рекоментдациями и взаимодействия с внешней рекомендательной системой")   
+      ContainerDb(RecommendationDB, "Recommendation Database", "PostgreSQL", "Хранит исторически данные про выданным рекомендациям")
+      Rel(RecommendationService, RecommendationDB, "Чтение/запись", "SQL")
+      Rel(RecommendationService, HistoryService, "Чтение исторических данных", "REST/HTTPS")
+      Rel(RecommendationService, FavoriteService, "Чтение предпочтений", "REST/HTTPS")
+
+    }
+ 
+}
+
+Rel(AdminApp, APIGW, "API вызовы", "REST/HTTPS")
+Rel(SupportApp, APIGW, "API вызовы", "REST/HTTPS")
+Rel(WebApplication, APIGW, "API вызовы", "REST/HTTPS")
+Rel(AndroidApp, APIGW, "API вызовы", "REST/HTTPS") 
+Rel(AppleApp, APIGW, "API вызовы", "REST/HTTPS") 
+Rel(SmartTV, APIGW, "API вызовы", "REST/HTTPS")
+
+Rel(APIGW, AuthService, "API вызовы", "REST/HTTPS") 
+Rel(APIGW, SubscriptionService, "API вызовы", "REST/HTTPS") 
+Rel(APIGW, PaymentService, "API вызовы", "REST/HTTPS") 
+Rel(APIGW, MetadataService, "API вызовы", "REST/HTTPS")
+Rel(APIGW, ContentService, "API вызовы", "REST/HTTPS") 
+Rel(APIGW, MarketingService, "API вызовы", "REST/HTTPS")
+Rel(APIGW, RecommendationService, "API вызовы", "REST/HTTPS")
+Rel(APIGW, FavoriteService, "API вызовы", "REST/HTTPS")
+Rel(APIGW, HistoryService, "API вызовы", "REST/HTTPS")
+Rel(APIGW, ContentService, "Получает ссылки внешних партнёрских кинотеатров", "REST/HTTPS")
+Rel(APIGW, SupportService, "API вызовы", "REST/HTTPS")
+
+Rel(MetadataService, Kafka, "Публикует события сервиса и телеметрию", "Kafka Protocol")
+Rel(PaymentService, Kafka, "Публикует события сервиса и телеметрию", "Kafka Protocol")
+Rel(RecommendationService, Kafka, "Публикует события сервиса и телеметрию", "Kafka Protocol")
+Rel(FavoriteService, Kafka, "Публикует события сервиса и телеметрию", "Kafka Protocol")
+Rel(HistoryService, Kafka, "Публикует события сервиса и телеметрию", "Kafka Protocol")
+Rel(AuthService, Kafka, "Публикует события пользователей и телеметрию", "Kafka Protocol") 
+Rel(MetadataService, Kafka, "Публикует события оценок и телеметрию", "Kafka Protocol") 
+Rel(ContentService, Kafka, "Публикует события просмотров и телеметрию", "Kafka Protocol") 
+Rel(PaymentService, Kafka, "Публикует платежные события и телеметрию", "Kafka Protocol") 
+Rel(Kafka, RecommendationSystem, "Отправляет события для анализа", "Kafka Protocol") 
+Rel(Kafka, HistoryService, "Отправляет события для аналитики", "Kafka Protocol")
+Rel(Kafka, RecommendationService, "Взаимодействие с внешней рекомендательной системой", "Kafka Protocol") 
+
+
+System_Ext(ext_FireWall, "FireWall на границе умного дома", "Фильтрация входящего/исходящего трафика")
+Rel(Administrator,ext_FireWall,"Управление сетевой безопасностью")
+Rel(ext_FireWall,CinemaSystem, "")
+
+@enduml
