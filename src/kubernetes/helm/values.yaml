@@ -105,14 +105,14 @@ eventsService:
       cpu: 100m
       memory: 128Mi
   service:
-    env:
+    port: 8082
+    targetPort: 8082
+    type: ClusterIP
+  extraEnv:
     - name: KAFKA_BROKER
       value: "kafka:9092"
     - name: BOOTSTRAP_SERVERS
       value: "kafka:9092"
-    port: 8082
-    targetPort: 8082
-    type: ClusterIP
 
 # Kafka configuration
 kafka:
@@ -163,6 +163,7 @@ zookeeper:
     enabled: true
     size: 1Gi
     accessMode: ReadWriteOnce
+
 # Ingress configuration
 ingress:
   enabled: true
@@ -181,9 +182,16 @@ ingress:
           pathType: Prefix
           service: events-service
           port: 8082
+        - path: /api/movies
+          pathType: Prefix
+          service: movies-service
+          port: 8081
+        - path: /api/monolith
+          pathType: Prefix
+          service: monolith
+          port: 8080
 
 # Application configuration
 config:
-  # Strangler Fig configuration
   gradualMigration: "true"
   moviesMigrationPercent: "100"
