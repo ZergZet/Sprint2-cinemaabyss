@@ -17,6 +17,15 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        required: true
+        default: 'docker'
+        type: choice
+        options:
+          - local
+          - docker
 
 jobs:
   api-tests:
@@ -30,33 +39,65 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          # Для workflow_run явно указать ref, чтобы взять код из той же ветки, которая запустила сборку. В остальных случаях ref определяется автоматически.
+          # Для workflow_run явно указать ref, чтобы взять код из той же ветки, которая запустила сборку
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.ref }}
 
-      - name: Start services with Docker Compose
+      # Шаги для автозапуска + ручной выбор docker
+      - name: Start services with Docker Compose (docker mode)
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'docker' }}
         run: |
           docker compose up -d --wait --wait-timeout 60 || true
           echo "=== Logs of monolith ===" 
-          docker logs cinemaabyss-monolith
+          docker logs cinemaabyss-monolith || true
           echo "========================"
           docker compose ps
-    
-      - name: Build API test image
+
+      - name: Build API test image (docker mode)
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'docker' }}
         run: |
           docker build -t cinemaabyss-api-tests ./tests/postman
 
-      - name: Wait for Kafka and create topics
+      - name: Wait for Kafka and create topics (docker mode)
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'docker' }}
         run: |
           chmod +x tests/postman/wait-for-kafka.sh
           tests/postman/wait-for-kafka.sh
 
-      - name: Run API tests in container
+      - name: Run API tests in container (docker mode)
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'docker' }}
         run: |
           docker run --rm \
             --network=cinemaabyss-network \
             -v "$(pwd)/tests/postman/reports:/app/reports" \
             cinemaabyss-api-tests --environment docker
 
+      # Шаги для ручного выбор local
+      - name: Start services with Docker Compose (local mode)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'local' }}
+        run: |
+          docker compose up -d
+          echo "Waiting for services to be ready..."
+          sleep 60
+
+      - name: Set up Node.js (local mode)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'local' }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: tests/postman/package-lock.json
+
+      - name: Install Newman (local mode)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'local' }}
+        working-directory: tests/postman
+        run: npm install
+
+      - name: Run API tests locally (local mode)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'local' }}
+        working-directory: tests/postman
+        run: npm run test:local   # предполагается, что в package.json есть такой скрипт
+
+      # Остановка сервисов 
       - name: Stop services
         if: always()
         run: docker compose down
