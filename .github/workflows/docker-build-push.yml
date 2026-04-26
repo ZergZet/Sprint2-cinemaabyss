@@ -7,6 +7,8 @@ on:
     paths:
       - 'src/**'
       - '.github/workflows/docker-build-push.yml'
+  pull_request:
+    branches: [ main, cinema ]
   release:
     types: [published]
 env:
