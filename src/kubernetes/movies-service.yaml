@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: movies-service
+  name: events-service
   namespace: cinemaabyss
   labels:
-    app: movies-service
+    app: events-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: movies-service
+      app: events-service
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,19 +18,21 @@ spec:
   template:
     metadata:
       labels:
-        app: movies-service
+        app: events-service
     spec:
       containers:
-      - name: movies-service
-        image: ghcr.io/db-exp/cinemaabysstest/movies-service:latest
+      - name: events-service
+        image: ghcr.io/zergzet/sprint2-cinemaabyss/events-service:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8081
+        - containerPort: 8082
         env:
         - name: PORT
-          value: "8081"
-        - name: DB_CONNECTION_STRING
-          value: "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
+          value: "8082"
+        - name: KAFKA_BROKER
+          value: "kafka:9092"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"
         envFrom:
         - configMapRef:
             name: cinemaabyss-config
@@ -38,21 +40,21 @@ spec:
             name: cinemaabyss-secrets
         resources:
           limits:
-            cpu: "300m"
+            cpu: "150m"
             memory: "256Mi"
           requests:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: "50m"
+            memory: "64Mi"
         readinessProbe:
           httpGet:
-            path: /api/movies/health
-            port: 8081
+            path: /api/events/health
+            port: 8082
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /api/movies/health
-            port: 8081
+            path: /api/events/health
+            port: 8082
           initialDelaySeconds: 15
           periodSeconds: 20
       restartPolicy: Always
@@ -62,12 +64,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: movies-service
+  name: events-service
   namespace: cinemaabyss
 spec:
   selector:
-    app: movies-service
+    app: events-service
   ports:
-  - port: 8081
-    targetPort: 8081
+  - port: 8082
+    targetPort: 8082
   type: ClusterIP

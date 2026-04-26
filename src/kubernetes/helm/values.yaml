@@ -5,7 +5,8 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: ewogICJhdXRocyI6IHsKICAgICJnaGNyLmlvIjogewogICAgICAiYXV0aCI6ICJXbVZ5WjFwbGREcG5hSEJmV0c1MFNWUmpOMVoyYTJkTGIySk1ZV04wWmxaRVRGTTROR3BIVGprek1XcFBkRlZzIgogICAgfQogIH0KfQo=
+
 # Database configuration
 database:
   host: postgres
@@ -19,10 +20,10 @@ database:
     pullPolicy: IfNotPresent
   resources:
     limits:
-      cpu: 1000m
+      cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 500m
+      cpu: 200m
       memory: 512Mi
   persistence:
     enabled: true
@@ -33,16 +34,16 @@ database:
 monolith:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/monolith
+    repository: ghcr.io/zergzet/sprint2-cinemaabyss/monolith
     tag: latest
     pullPolicy: Always
   replicas: 1
   resources:
     limits:
-      cpu: 500m
+      cpu: 300m
       memory: 512Mi
     requests:
-      cpu: 100m
+      cpu: 150m
       memory: 128Mi
   service:
     port: 8080
@@ -53,16 +54,16 @@ monolith:
 proxyService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/proxy-service
+    repository: ghcr.io/zergzet/sprint2-cinemaabyss/proxy-service
     tag: latest
     pullPolicy: Always
   replicas: 1
   resources:
     limits:
-      cpu: 300m
+      cpu: 200m
       memory: 256Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
   service:
     port: 80
@@ -73,16 +74,16 @@ proxyService:
 moviesService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/movies-service
+    repository: ghcr.io/zergzet/sprint2-cinemaabyss/movies-service
     tag: latest
     pullPolicy: Always
   replicas: 1
   resources:
     limits:
-      cpu: 300m
+      cpu: 200m
       memory: 256Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
   service:
     port: 8081
@@ -93,7 +94,7 @@ moviesService:
 eventsService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/events-service
+    repository: ghcr.io/zergzet/sprint2-cinemaabyss/events-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -177,9 +178,16 @@ ingress:
           pathType: Prefix
           service: events-service
           port: 8082
+        - path: /api/movies
+          pathType: Prefix
+          service: movies-service
+          port: 8081
+        - path: /api/monolith
+          pathType: Prefix
+          service: monolith
+          port: 8080
 
 # Application configuration
 config:
-  # Strangler Fig configuration
   gradualMigration: "true"
   moviesMigrationPercent: "100"

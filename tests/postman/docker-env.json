@@ -1,0 +1,15 @@
+{
+  "id": "docker-env",
+  "name": "Docker",
+  "values": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "moviesServiceUrl", "value": "http://localhost:8081" },
+    { "key": "eventsServiceUrl", "value": "http://localhost:8082" },
+    { "key": "proxyServiceUrl", "value": "http://localhost:8000" },
+    { "key": "userId", "value": "" },
+    { "key": "movieId", "value": "" },
+    { "key": "msMovieId", "value": "" },
+    { "key": "paymentId", "value": "" },
+    { "key": "subscriptionId", "value": "" }
+  ]
+}

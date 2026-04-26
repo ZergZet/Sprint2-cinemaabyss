@@ -13,11 +13,15 @@ COPY . .
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o monolith .
+# Собираем без интернета
+#RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -o monolith .
 
 # Use a smaller image for the final application
 FROM alpine:latest  
 
 RUN apk --no-cache add ca-certificates
+# Копируем сертификаты из builder-образа (чтобы не вызывать apk)
+#COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 WORKDIR /root/
 
