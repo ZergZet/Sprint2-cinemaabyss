@@ -365,7 +365,7 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
-![скриншот развертывания helm и вывода](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/Helm.png)
+![скриншот развертывания helm, прогона тестов и вывода фильмов](https://github.com/ZergZet/Sprint2-cinemaabyss/blob/cinema/screenshots/HelmTestsResult.PNG)
 
 ## Удаляем все
 
